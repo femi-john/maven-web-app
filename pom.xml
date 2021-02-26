@@ -103,7 +103,7 @@
 		    
 		          
 	    </repository>
-	    
+	    <!-- provided dependencies -->
 	    <snapshotRepository>
 	      <id>nexus</id>
 	      <name>Landmark Technologies Snapshot Nexus Repository </name>
