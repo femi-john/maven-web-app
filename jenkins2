@@ -1,0 +1,42 @@
+node
+{
+   def mavenHome = tool name: 'maven3.6.3' 
+    
+stage('1. CodeClone')
+    {
+        
+      git credentialsId: 'Git_Credentials', url: 'https://github.com/femi-john/maven-web-app.git'  
+    }
+stage('2. Build')
+{
+    sh "${mavenHome}/bin/mvn package"
+    
+    
+}
+
+stage('3. CodeQuality')
+
+    {
+    
+    sh "${mavenHome}/bin/mvn sonar:sonar"  
+        
+    }
+stage('4. UploadNexus')
+    {
+    sh "${mavenHome}/bin/mvn deploy"  
+        
+    }
+stage('5. Approval' )
+    {
+        echo "Approved. Ready for deployment"
+    }
+stage('6. DeployTomcat') 
+    {
+    deploy adapters: [tomcat9(credentialsId: 'Tomcat-Credentials', path: '', url: 'http://35.182.2.10:8080/')], contextPath: null, war: 'target/*war' 
+        
+    }
+stage('7. Notification')
+    {
+    emailextrecipients([developers()])
+    }
+}
